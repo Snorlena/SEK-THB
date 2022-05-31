@@ -21,8 +21,17 @@ else:
     fromMonth = str(fromMonth)
 
 fromDate = fromYear + "-" + fromMonth + "-" + x.strftime("%d")
-toDate = x.strftime("%Y-%m-%d")
-skro = requests.get("https://www.riksbank.se/sv/statistik/sok-rantor--valutakurser/?c=cAverage&f=Day&from=" + fromDate +"&g130-SEKTHBPMI=on&s=Dot&to=" + toDate + "&export=csv")
+
+timeNow = int(x.strftime("%H"))
+
+if timeNow > 13:
+    toDate = x.strftime("%Y-%m-%d") 
+    skro = requests.get("https://www.riksbank.se/sv/statistik/sok-rantor--valutakurser/?c=cAverage&f=Day&from=" + fromDate +"&g130-SEKTHBPMI=on&s=Dot&to=" + toDate + "&export=csv")
+else:
+    oneDayAgo = int(x.strftime("%d")) -1
+    toDate = x.strftime("%Y-%m-"+str(oneDayAgo))
+    skro = requests.get("https://www.riksbank.se/sv/statistik/sok-rantor--valutakurser/?c=cAverage&f=Day&from=" + fromDate +"&g130-SEKTHBPMI=on&s=Dot&to=" + toDate + "&export=csv")
+
 
 f = open("skrot.csv", "w")
 f.write(skro.text)
